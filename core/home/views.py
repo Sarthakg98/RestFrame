@@ -10,11 +10,11 @@ from rest_framework.response import Response
 
 
 #class based view
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListCreateAPIView
 from .models import Student
 from .serializers import StudentSerializer
 
-class StudentListView(ListAPIView):
+class StudentListCreateView(ListCreateAPIView):
     queryset =Student.objects.all()
     serializer_class = StudentSerializer
     
