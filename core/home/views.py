@@ -22,6 +22,10 @@ from rest_framework.generics import RetrieveUpdateAPIView
 from .models import Student
 from .serializers import StudentSerializer
 
+
+#API VIEW
+#MODEL VIEWSET
+
 class StudentUpdateView(RetrieveUpdateAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
