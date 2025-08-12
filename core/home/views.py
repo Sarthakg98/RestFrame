@@ -34,8 +34,9 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Student
-from .serializers import StudentSerializer
+from .models import Student, Course
+from .serializers import StudentSerializer, CourseSerializer
+from rest_framework import viewsets
 
 @api_view(['GET', 'POST'])
 def student_list_create(request):
@@ -69,3 +70,7 @@ def student_detail(request, pk):
     elif request.method == 'DELETE':
         student.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class CourseViewSet(viewsets.ModelViewSet):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer    
