@@ -1,10 +1,15 @@
 from rest_framework import serializers
-from .models import Student
+from .models import Student, Course
 
 def starts_with_r(value):
     "Ensure name starts with 'R'"
     if not value.lower().startswith('r'):
         raise serializers.ValidationError('Name must start with "R".')
+    
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Course
+        fields=['id', 'name', 'duration', 'fee']     
 
 class StudentSerializer(serializers.ModelSerializer):
     name = serializers.CharField(validators=[starts_with_r])
