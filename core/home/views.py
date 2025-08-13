@@ -37,6 +37,32 @@ from rest_framework import status
 from .models import Student, Course
 from .serializers import StudentSerializer, CourseSerializer
 from rest_framework import viewsets
+from django.db.models import Avg, Count, F
+
+#Aggregate endpoint
+@api_view(['GET'])
+def aggregate_view(request):
+    data = Student.objects.aggregate(
+        avg_roll=Avg('roll'),
+        total_students=Count('id')
+    )
+    return Response(data, status=status.HTTP_200_OK)
+
+#Annotate endpoint
+@api_view(['GET'])
+def annotate_view(request):
+    courses= Course.objects.annotate(
+        total_students=Count('students'),
+        avg_roll=Avg('students__roll'),
+    ).values('name', 'total_students', 'avg_roll')
+    return Response(list(courses), status=status.HTTP_200_OK)
+
+# FILTER endpoint
+@api_view(['GET'])
+def filter_view(request):
+    # Example: Filter students with roll >= 2
+    students = Student.objects.filter(roll__gte=2).values('name', 'roll', 'city', 'course__name')
+    return Response(list(students))
 
 @api_view(['GET', 'POST'])
 def student_list_create(request):
@@ -73,4 +99,19 @@ def student_detail(request, pk):
     
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
-    serializer_class = CourseSerializer    
+    serializer_class = CourseSerializer
+    
+    
+@api_view(['GET'])
+def select_related_view(request):
+    students= Student.objects.select_related('course').values(
+        'name', 'roll', 'course__name', 'course__duration', 'course__fee'
+        ) 
+    return Response(list(students), status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def prefetch_related_view(request):
+    courses = Course.objects.prefetch_related('students').values(
+        'name', 'duration', 'students__name', 'students__roll'
+    )
+    return Response(list(courses))   

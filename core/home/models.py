@@ -19,10 +19,15 @@ class Student(BaseModel):
     is_active = models.BooleanField(default=True)
     course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='students', null=True, blank=True)
     
+    def __str__(self):
+        return f"Student: {self.name}, Roll: {self.roll}, City: {self.city}, Course: {self.course.name}"
     
 #Create a course model
 class Course(BaseModel):
     name= models.CharField(max_length=100)
     duration = models.CharField(max_length=50)
     fee = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    def __str__(self):
+        return f"Course: {self.name}, Duration: {self.duration}, Fee: {self.fee}"
     
